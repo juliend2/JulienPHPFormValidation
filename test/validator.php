@@ -25,7 +25,7 @@ class ValidatorTest extends WebTestCase {
     $this->setField('last_name', 'Desrosiers');
     $this->setField('username', 'jdesrosiers');
     $this->setField('password', '23r29fh2f2');
-    $this->setField('password', 'not the same!');
+    $this->setField('confirm_password', 'not the same!');
     $this->click('Submit');
     $this->assertPattern('/Password Confirmation is not the same as Password/');
     $this->assertNoPattern('/First Name must not be empty/');
@@ -38,6 +38,17 @@ class ValidatorTest extends WebTestCase {
     $this->assertPattern('/First Name must not be empty/');
   }
 
+  function testEmailNotValid()
+  {
+    $this->setField('first_name', 'Julien');
+    $this->setField('last_name', 'Desrosiers');
+    $this->setField('email', 'not_an_email');
+    $this->setField('username', 'jdesrosiers');
+    $this->setField('password', '23r29fh2f2');
+    $this->setField('confirm_password', '23r29fh2f2');
+    $this->click('Submit');
+    $this->assertPattern('/Email must have a valid format./');
+  }
 }
 
 

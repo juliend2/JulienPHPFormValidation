@@ -11,6 +11,10 @@ $validator = new Validator(array(
     'human_name'=>'Last Name',
     'rules'=>array('not_empty')
   ),
+  'email'=> array(
+    'human_name'=>'Email',
+    'rules'=>array('not_empty', array('format'=>'email'))
+  ),
   'username'=> array(
     'human_name'=>'User name',
     'rules'=>array('not_empty')
@@ -40,13 +44,18 @@ if ( $_POST )
 
 <form method="post" action="index.php">
 
-  <?php $validator->display_errors(); ?>
+  <ul>
+    <?php $validator->display_errors(); ?>
+  </ul>
 
   <p><label>First Name</label>
   <input type="text" name="first_name" /></p>
 
   <p><label>Last Name</label>
   <input type="text" name="last_name" /></p>
+
+  <p><label>Email</label>
+  <input type="text" name="email" /></p>
 
   <p><label>Username</label>
   <input type="text" name="username" /></p>

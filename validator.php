@@ -12,13 +12,16 @@
  * @author Julien Desrosiers
  */
 class Field {
-  
-  var $_name = '';
-  var $_rules = array();
-  var $_human_name = '';
-  var $_error = array(); // keys: message, type
-  var $_is_valid = true;
+
+  var $_formats     = array(
+    'email' => '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'
+  );
   var $_posted_data = array();
+  var $_error       = array(); // keys: message, type
+  var $_rules       = array();
+  var $_is_valid    = true;
+  var $_human_name  = '';
+  var $_name        = '';
 
   function Field($name, $rules, $human_name) 
   {
@@ -46,10 +49,14 @@ class Field {
   {
     foreach ( $this->_rules as $rule )
     {
+      $message = is_array($rule) && $rule['message'] ? $rule['message'] : '' ;
       if ( $rule === 'not_empty' || $rule['not_empty'])
       {
-        $this->_validate_not_empty( is_array($rule) && $rule['message'] ? $rule['message'] : '' );
-        $this->_is_valid = false;
+        $this->_validate_not_empty( $message );
+      }
+      else if ( $rule['format'] )
+      {
+        $this->_validate_format( $rule['format'], $message );
       }
     }
   }
@@ -60,13 +67,27 @@ class Field {
     {
       $this->_error = array(
         'type'=>'not_empty', 
-        'message'=>$this->_format_message($message, ' must not be empty.'));
+        'message'=>$this->_format_message($message, ' must not be empty.') );
+      $this->_is_valid = false;
+      return false;
+    }
+  }
+
+  function _validate_format($format, $message='')
+  {
+    if ( !preg_match($this->_formats[$format], $this->_posted_data[ $this->_name ]) )
+    {
+      $this->_error = array(
+        'type'=>'format',
+        'message'=>$this->_format_message($message, ' must have a valid format.'));
+      $this->_is_valid = false;
+      return false;
     }
   }
 
   function _format_message($message, $default_message)
   {
-    return   ($this->_human_name !== '' ? $this->_human_name : $this->_name) 
+    return   ($this->_human_name !== '' ? $this->_human_name : $this->_name)
            . ($message !== '' ? $message : $default_message);
   }
 
@@ -79,10 +100,11 @@ class Field {
  */
 class Validator {
 
-  var $_posted = array();
-  var $_fields = array();
+  var $error_template = '<li class="error">{error_msg}</li>';
+  var $_posted        = array();
+  var $_fields        = array();
+  var $_errors        = array();
   var $_is_form_valid = true;
-  var $_errors = array();
 
   /**
    * @param Array $rules
@@ -118,12 +140,12 @@ class Validator {
 
   function display_errors()
   {
-    $messages = array();
+    $msg_string = '';
     foreach ( $this->_errors as $k => $v )
     {
-      $messages[] = $v['message'];
+      $msg_string .= str_replace('{error_msg}', $v['message'], $this->error_template);
     }
-    print implode($messages, '<br/> ');
+    print $msg_string;
   }
 
 } // Validator
