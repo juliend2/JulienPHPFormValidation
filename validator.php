@@ -1,10 +1,10 @@
 <?php
-// function pr($obj)
-// {
-//   echo '<pre>';
-//   print_r($obj);
-//   echo '</pre>';
-// }
+function pr($obj)
+{
+  echo '<pre>';
+  print_r($obj);
+  echo '</pre>';
+}
 
 
 /**
@@ -72,6 +72,7 @@ class Field {
     {
       if ( $this->_type === 'checkbox' )
       {
+        echo " value='on'";
       }
       else
       {
