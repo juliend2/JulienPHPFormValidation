@@ -29,7 +29,8 @@ $validator = new Validator(array(
   ),
   'accept_terms'=> array(
     'human_name'=>'Accept Terms',
-    'rules'=>array('checked'=>true)
+    'rules'=>array('checked'=>true),
+    'type'=>'checkbox'
   ),
 ));
 
@@ -45,20 +46,23 @@ if ( $_POST )
 <form method="post" action="index.php">
 
   <ul>
-    <?php $validator->display_errors(); ?>
+    <?php 
+    $validator->display_errors();
+    $fields = $validator->get_fields();
+    ?>
   </ul>
 
   <p><label>First Name</label>
-  <input type="text" name="first_name" /></p>
+  <input type="text" name="first_name" <?php $fields['first_name']->value() ?> /></p>
 
   <p><label>Last Name</label>
-  <input type="text" name="last_name" /></p>
+  <input type="text" name="last_name" <?php $fields['last_name']->value() ?> /></p>
 
   <p><label>Email</label>
-  <input type="text" name="email" /></p>
+  <input type="text" name="email" <?php $fields['email']->value() ?> /></p>
 
   <p><label>Username</label>
-  <input type="text" name="username" /></p>
+  <input type="text" name="username" <?php $fields['username']->value() ?> /></p>
 
   <p><label>Password</label>
   <input type="password" name="password" /></p>
@@ -67,7 +71,7 @@ if ( $_POST )
   <input type="password" name="confirm_password" /></p>
 
   <p><label>I Accept the Terms and Conditions</label>
-  <input type="checkbox" name="accept_terms" /></p>
+  <input type="checkbox" name="accept_terms" <?php $fields['accept_terms']->value() ?> /></p>
 
   <p>
   <input type="submit" name="send" value="Submit" />

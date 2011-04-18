@@ -20,14 +20,24 @@ class Field {
   var $_error       = array(); // keys: message, type
   var $_rules       = array();
   var $_is_valid    = true;
+  var $_type        = 'text';
   var $_human_name  = '';
   var $_name        = '';
 
-  function Field($name, $rules, $human_name) 
+  function Field($name, $rules, $human_name, $type) 
   {
     $this->_name = $name;
     $this->_rules = $rules;
     $this->_human_name = $human_name;
+    $this->_type = $type;
+  }
+
+  /**
+   * Getters and Setters
+   */
+  function name()
+  {
+    return $this->_name;
   }
 
   /**
@@ -38,6 +48,41 @@ class Field {
     $this->_posted_data = $posted_data;
     $this->_dispatch_validation();
     return $this->_is_valid;
+  }
+
+  function _is_form_posted()
+  {
+    return count($this->_posted_data) > 0;
+  }
+
+  function value( $default_value='' )
+  {
+    if ( $this->_is_form_posted() )
+    {
+      if ( $this->_type === 'checkbox' && $this->_posted_value() !== '' )
+      {
+        echo " checked='checked'";
+      }
+      else
+      {
+        echo " value='{$this->_posted_value()}'";
+      }
+    }
+    else
+    {
+      if ( $this->_type === 'checkbox' )
+      {
+      }
+      else
+      {
+        echo " value='{$default_value}'";
+      }
+    }
+  }
+
+  function _posted_value()
+  {
+    return ($this->_posted_data[$this->_name] ? $this->_posted_data[$this->_name] : '');
   }
 
   function error()
@@ -117,7 +162,9 @@ class Validator {
     {
       $this->_fields[] = new Field($field_name, 
         $field_infos['rules'], 
-        $field_infos['human_name'] ? $field_infos['human_name'] : '');
+        $field_infos['human_name'] ? $field_infos['human_name'] : '',
+        $field_infos['type'] ? $field_infos['type'] : 'text'
+        );
     }
 
     if ( $this->_posted )
@@ -145,7 +192,17 @@ class Validator {
     {
       $msg_string .= str_replace('{error_msg}', $v['message'], $this->error_template);
     }
-    print $msg_string;
+    echo $msg_string;
+  }
+
+  function get_fields()
+  {
+    $fields = array();
+    foreach ( $this->_fields as $k => $v )
+    {
+      $fields[ $v->name() ] = $v;
+    }
+    return $fields;
   }
 
 } // Validator
