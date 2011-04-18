@@ -28,6 +28,7 @@ class ValidatorTest extends WebTestCase {
     $this->setField('password', 'not the same!');
     $this->click('Submit');
     $this->assertPattern('/Password Confirmation is not the same as Password/');
+    $this->assertNoPattern('/First Name must not be empty/');
   }
 
   function testNotEmptyError()
