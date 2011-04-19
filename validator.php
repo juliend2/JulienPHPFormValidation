@@ -6,16 +6,16 @@
  */
 class Field {
 
-  var $_formats     = array(
-    'email' => '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'
-  );
-  var $_messages    = array(
+  var $messages    = array(
     'not_empty' => "{{attribute}} must not be empty.",
     'checked' => "{{attribute}} must be checked.",
     'format' => "{{attribute}} must have a valid format.",
     'min_length' => "{{attribute}} must be at least {{min_length}} characters.",
     'max_length' => "{{attribute}} must be less than {{max_length}} characters.",
     'same_as' => "{{attribute}} must be the same as {{same_as}}."
+  );
+  var $_formats     = array(
+    'email' => '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'
   );
   var $_posted_data = array();
   var $_error       = array(); // keys: message, type
@@ -117,7 +117,7 @@ class Field {
     {
       $this->_error = array(
         'type'=>'not_empty', 
-        'message'=>$this->_format_message($message, $this->_messages['not_empty']) );
+        'message'=>$this->_format_message($message, $this->messages['not_empty']) );
       return $this->_is_valid = false;
     }
     else return true;
@@ -130,7 +130,7 @@ class Field {
     {
       $this->_error = array(
         'type'=>'format',
-        'message'=>$this->_format_message($message, $this->_messages['format']));
+        'message'=>$this->_format_message($message, $this->messages['format']));
       return $this->_is_valid = false;
     } 
     else return true;
@@ -143,7 +143,7 @@ class Field {
     {
       $this->_error = array(
         'type'=>'format',
-        'message'=>$this->_format_message($message, str_replace("{{min_length}}", $rule['min_length'], $this->_messages['min_length'])));
+        'message'=>$this->_format_message($message, str_replace("{{min_length}}", $rule['min_length'], $this->messages['min_length'])));
       return $this->_is_valid = false;
     } 
     else return true;
@@ -156,7 +156,7 @@ class Field {
     {
       $this->_error = array(
         'type'=>'format',
-        'message'=>$this->_format_message($message, str_replace("{{max_length}}", $rule['max_length'], $this->_messages['max_length'])));
+        'message'=>$this->_format_message($message, str_replace("{{max_length}}", $rule['max_length'], $this->messages['max_length'])));
       return $this->_is_valid = false;
     } 
     else return true;
@@ -167,7 +167,7 @@ class Field {
     if ( is_array($rule) && array_key_exists('same_as', $rule) && 
          $this->_form_instance->get_field_by_name($rule['same_as']) !== $this->_posted_data[ $this->_name ] )
     {
-      $error_msg = str_replace("{{same_as}}", $this->_form_instance->get_field_by_name($rule['same_as'])->human(), $this->_messages['same_as']);
+      $error_msg = str_replace("{{same_as}}", $this->_form_instance->get_field_by_name($rule['same_as'])->human(), $this->messages['same_as']);
       $this->_error = array(
         'type'=>'format',
         'message'=>$this->_format_message($message, $error_msg));
@@ -182,7 +182,7 @@ class Field {
     {
       $this->_error = array(
         'type'=>'checked',
-        'message'=>$this->_format_message($message, $this->_messages['checked']));
+        'message'=>$this->_format_message($message, $this->messages['checked']));
       return $this->_is_valid = false;
     } 
     else return true;
