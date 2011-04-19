@@ -56,6 +56,13 @@ class ValidatorTest extends WebTestCase {
     $this->assertPattern('/Accept Terms must be checked./');
   }
 
+  function testTermsAccepted()
+  {
+    $this->setField('accept_terms', 'on');
+    $this->click('Submit');
+    $this->assertNoPattern('/Accept Terms must be checked./');
+  }
+
   function testPasswordMinLenght()
   {
     $this->setField('password', '123');

@@ -66,7 +66,7 @@ $validator = new Validator(array(
   <input type="password" name="confirm_password" /></p>
 
   <p><label>I Accept the Terms and Conditions</label>
-  <input type="checkbox" name="accept_terms" <?php $fields['accept_terms']->value() ?> /></p>
+  <input type="checkbox" name="accept_terms" value="on" <?php $fields['accept_terms']->value() ?> /></p>
 
   <p>
   <input type="submit" name="send" value="Submit" />
