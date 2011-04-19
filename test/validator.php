@@ -1,8 +1,8 @@
 <?php
 
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/web_tester.php');
-require_once('simpletest/reporter.php');
+require_once('../../simpletest/unit_tester.php');
+require_once('../../simpletest/web_tester.php');
+require_once('../../simpletest/reporter.php');
 require_once('../validator.php');
 
 class ValidatorTest extends WebTestCase {

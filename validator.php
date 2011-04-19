@@ -17,11 +17,11 @@ class Field {
     'email' => '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'
   );
   var $_messages    = array(
-    'not_empty' => " must not be empty.",
-    'checked' => " must be checked.",
-    'format' => " must have a valid format.",
-    'min_length' => " must be at least {{min_length}} characters.",
-    'max_length' => " must be less than {{max_length}} characters."
+    'not_empty' => "{{attribute}} must not be empty.",
+    'checked' => "{{attribute}} must be checked.",
+    'format' => "{{attribute}} must have a valid format.",
+    'min_length' => "{{attribute}} must be at least {{min_length}} characters.",
+    'max_length' => "{{attribute}} must be less than {{max_length}} characters."
   );
   var $_posted_data = array();
   var $_error       = array(); // keys: message, type
@@ -177,8 +177,9 @@ class Field {
 
   function _format_message($message, $default_message)
   {
-    return   ($this->_human_name !== '' ? $this->_human_name : $this->_name)
-           . ($message !== '' ? $message : $default_message);
+    return str_replace("{{attribute}}", 
+      ($this->_human_name !== '' ? $this->_human_name : $this->_name), 
+      ($message !== '' ? $message : $default_message) );
   }
 
 } // Field
