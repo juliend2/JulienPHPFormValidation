@@ -2,7 +2,7 @@ h1. JulienPHPFormValidation
 
 h2. Who is it for?
 
-It's a library for people like me who don't want/need to use a PHP framework.
+It's a form validation library for people who, like me, don't want/need to use a PHP framework.
 
 h2. Usage
 
@@ -40,6 +40,7 @@ For more details, look at form.php in the examples folder.
 
 h2. Testing
 
-To run the tests, you must include
-"SimpleTest":http://www.simpletest.org in test/validator.php .
+To run the tests, you must include "SimpleTest":http://www.simpletest.org in test/validator.php .
 You'll probably also need to change the URL in the setUp method.
+
+h2. May The VALID be with you.
