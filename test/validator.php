@@ -13,12 +13,6 @@ class ValidatorTest extends WebTestCase {
     $this->assertText('Hello');
   }
 
-  function testSubmit() 
-  {
-    $this->click('Submit');
-    $this->assertText('form sent!');
-  }
-
   function testPasswordNotTheSame()
   {
     $this->setField('first_name', 'Julien');

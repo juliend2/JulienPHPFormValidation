@@ -34,11 +34,6 @@ $validator = new Validator(array(
   ),
 ));
 
-if ( $_POST )
-{
-  echo 'form sent!';
-}
-
 ?>
 
 <h1>Hello</h1>
