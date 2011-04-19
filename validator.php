@@ -19,7 +19,9 @@ class Field {
   var $_messages    = array(
     'not_empty' => " must not be empty.",
     'checked' => " must be checked.",
-    'format' => " must have a valid format."
+    'format' => " must have a valid format.",
+    'min_length' => " must be at least {{min_length}} characters.",
+    'max_length' => " must be less than {{max_length}} characters."
   );
   var $_posted_data = array();
   var $_error       = array(); // keys: message, type
@@ -102,9 +104,11 @@ class Field {
     {
       $message = is_array($rule) && $rule['message'] ? $rule['message'] : '' ;
 
-      if (!$this->_validate_not_empty( $rule, $message )) break;
-      if (!$this->_validate_format( $rule, $message ))    break;
-      if (!$this->_validate_checked( $rule, $message ))   break;
+      if (!$this->_validate_not_empty( $rule, $message ))  break;
+      if (!$this->_validate_format( $rule, $message ))     break;
+      if (!$this->_validate_checked( $rule, $message ))    break;
+      if (!$this->_validate_min_length( $rule, $message )) break;
+      if (!$this->_validate_max_length( $rule, $message )) break;
     }
   }
 
@@ -128,6 +132,32 @@ class Field {
       $this->_error = array(
         'type'=>'format',
         'message'=>$this->_format_message($message, $this->_messages['format']));
+      return $this->_is_valid = false;
+    } 
+    else return true;
+  }
+
+  function _validate_min_length($rule, $message)
+  {
+    if ( is_array($rule) && array_key_exists('min_length', $rule) && 
+         strlen(trim($this->_posted_data[ $this->_name ])) < $rule['min_length'] )
+    {
+      $this->_error = array(
+        'type'=>'format',
+        'message'=>$this->_format_message($message, str_replace("{{min_length}}", $rule['min_length'], $this->_messages['min_length'])));
+      return $this->_is_valid = false;
+    } 
+    else return true;
+  }
+
+  function _validate_max_length($rule, $message)
+  {
+    if ( is_array($rule) && array_key_exists('max_length', $rule) && 
+         strlen(trim($this->_posted_data[ $this->_name ])) > $rule['max_length'] )
+    {
+      $this->_error = array(
+        'type'=>'format',
+        'message'=>$this->_format_message($message, str_replace("{{max_length}}", $rule['max_length'], $this->_messages['max_length'])));
       return $this->_is_valid = false;
     } 
     else return true;
@@ -160,7 +190,7 @@ class Field {
  */
 class Validator {
 
-  var $error_template = '<li class="error">{error_msg}</li>';
+  var $error_template = '<li class="error">{{error_msg}}</li>';
   var $_posted        = array();
   var $_fields        = array();
   var $_errors        = array();
@@ -205,7 +235,7 @@ class Validator {
     $msg_string = '';
     foreach ( $this->_errors as $k => $v )
     {
-      $msg_string .= str_replace('{error_msg}', $v['message'], $this->error_template);
+      $msg_string .= str_replace('{{error_msg}}', $v['message'], $this->error_template);
     }
     echo $msg_string;
   }

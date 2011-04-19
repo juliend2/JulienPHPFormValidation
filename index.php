@@ -17,11 +17,11 @@ $validator = new Validator(array(
   ),
   'username'=> array(
     'human_name'=>'User name',
-    'rules'=>array('not_empty')
+    'rules'=>array('not_empty', array('max_length'=>20))
   ),
   'password'=> array(
     'human_name'=>'Password',
-    'rules'=>array('not_empty')
+    'rules'=>array('not_empty', array('min_length'=>5))
   ),
   'confirm_password'=> array(
     'human_name'=>'Password Confirmation',

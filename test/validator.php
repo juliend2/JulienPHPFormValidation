@@ -61,6 +61,21 @@ class ValidatorTest extends WebTestCase {
     $this->click('Submit');
     $this->assertPattern('/Accept Terms must be checked./');
   }
+
+  function testPasswordMinLenght()
+  {
+    $this->setField('password', '123');
+    $this->setField('confirm_password', '123');
+    $this->click('Submit');
+    $this->assertPattern('/Password must be at least 5 characters./');
+  }
+
+  function testPasswordMaxLenght()
+  {
+    $this->setField('username', '123456789012345678901');
+    $this->click('Submit');
+    $this->assertPattern('/User name must be less than 20 characters./');
+  }
 }
 
 
