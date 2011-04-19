@@ -21,7 +21,8 @@ class Field {
     'checked' => "{{attribute}} must be checked.",
     'format' => "{{attribute}} must have a valid format.",
     'min_length' => "{{attribute}} must be at least {{min_length}} characters.",
-    'max_length' => "{{attribute}} must be less than {{max_length}} characters."
+    'max_length' => "{{attribute}} must be less than {{max_length}} characters.",
+    'same_as' => "{{attribute}} must be the same as {{same_as}}."
   );
   var $_posted_data = array();
   var $_error       = array(); // keys: message, type
@@ -30,9 +31,11 @@ class Field {
   var $_type        = 'text';
   var $_human_name  = '';
   var $_name        = '';
+  var $_form_instance;
 
-  function Field($name, $rules, $human_name, $type) 
+  function Field($form, $name, $rules, $human_name, $type) 
   {
+    $this->_form_instance = $form;
     $this->_name = $name;
     $this->_rules = $rules;
     $this->_human_name = $human_name;
@@ -47,6 +50,11 @@ class Field {
     return $this->_name;
   }
 
+  function human()
+  {
+    return $this->_human_name;
+  }
+
   /**
    * @return Boolean
    */
@@ -55,11 +63,6 @@ class Field {
     $this->_posted_data = $posted_data;
     $this->_dispatch_validation();
     return $this->_is_valid;
-  }
-
-  function _is_form_posted()
-  {
-    return count($this->_posted_data) > 0;
   }
 
   function value( $default_value='' )
@@ -88,11 +91,6 @@ class Field {
     }
   }
 
-  function _posted_value()
-  {
-    return ($this->_posted_data[$this->_name] ? $this->_posted_data[$this->_name] : '');
-  }
-
   function error()
   {
     return $this->_error;
@@ -109,8 +107,13 @@ class Field {
       if (!$this->_validate_checked( $rule, $message ))    break;
       if (!$this->_validate_min_length( $rule, $message )) break;
       if (!$this->_validate_max_length( $rule, $message )) break;
+      if (!$this->_validate_same_as( $rule, $message ))    break;
     }
   }
+
+  /**
+   * Validation rules
+   */
 
   function _validate_not_empty($rule, $message)
   {
@@ -163,6 +166,20 @@ class Field {
     else return true;
   }
 
+  function _validate_same_as($rule, $message)
+  {
+    if ( is_array($rule) && array_key_exists('same_as', $rule) && 
+         $this->_form_instance->get_field_by_name($rule['same_as']) !== $this->_posted_data[ $this->_name ] )
+    {
+      $error_msg = str_replace("{{same_as}}", $this->_form_instance->get_field_by_name($rule['same_as'])->human(), $this->_messages['same_as']);
+      $this->_error = array(
+        'type'=>'format',
+        'message'=>$this->_format_message($message, $error_msg));
+      return $this->_is_valid = false;
+    } 
+    else return true;
+  }
+
   function _validate_checked($rule, $message)
   {
     if ( $rule === 'checked' && empty($this->_posted_data[ $this->_name ]) )
@@ -175,11 +192,29 @@ class Field {
     else return true;
   }
 
+  /**
+   * Useful methods
+   */
+  
+  // format the error message's string
   function _format_message($message, $default_message)
   {
     return str_replace("{{attribute}}", 
       ($this->_human_name !== '' ? $this->_human_name : $this->_name), 
       ($message !== '' ? $message : $default_message) );
+  }
+
+  // get the POSTed values
+  function _posted_value()
+  {
+    return ($this->_posted_data[$this->_name] ? $this->_posted_data[$this->_name] : '');
+  }
+
+  // is the form POSTed? 
+  // @return true if so. false otherwise.
+  function _is_form_posted()
+  {
+    return count($this->_posted_data) > 0;
   }
 
 } // Field
@@ -206,7 +241,9 @@ class Validator {
 
     foreach ( $fields as $field_name => $field_infos )
     {
-      $this->_fields[] = new Field($field_name, 
+      $this->_fields[] = new Field(
+        $this, 
+        $field_name, 
         $field_infos['rules'], 
         $field_infos['human_name'] ? $field_infos['human_name'] : '',
         $field_infos['type'] ? $field_infos['type'] : 'text'
@@ -249,6 +286,12 @@ class Validator {
       $fields[ $v->name() ] = $v;
     }
     return $fields;
+  }
+
+  function get_field_by_name( $name )
+  {
+    $field = $this->get_fields();
+    return $field[ $name ];
   }
 
 } // Validator
