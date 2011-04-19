@@ -26,7 +26,7 @@ class Field {
   var $_name        = '';
   var $_form_instance;
 
-  function Field($form, $name, $rules, $human_name, $type) 
+  function Field($form, $name, $rules, $human_name, $type)
   {
     $this->_form_instance = $form;
     $this->_name = $name;
@@ -38,19 +38,20 @@ class Field {
   /**
    * Getters and Setters
    */
+
+  // @return String
   function name()
   {
     return $this->_name;
   }
 
+  // @return String
   function human()
   {
     return $this->_human_name;
   }
 
-  /**
-   * @return Boolean
-   */
+  // @return Boolean
   function is_valid( $posted_data )
   {
     $this->_posted_data = $posted_data;
@@ -58,6 +59,13 @@ class Field {
     return $this->_is_valid;
   }
 
+  // @return String
+  function error()
+  {
+    return $this->_error;
+  }
+
+  // @return String
   function value( $default_value='' )
   {
     if ( $this->_is_form_posted() )
@@ -82,11 +90,6 @@ class Field {
         echo " value='{$default_value}'";
       }
     }
-  }
-
-  function error()
-  {
-    return $this->_error;
   }
 
   function _dispatch_validation()
@@ -249,18 +252,6 @@ class Validator {
     }
   }
 
-  function _validate()
-  {
-    foreach ( $this->_fields as $field )
-    {
-      if ( !$field->is_valid( $this->_posted ) ) 
-      {
-        $this->_is_form_valid = false;
-        $this->_errors[] = $field->error();
-      }
-    }
-  }
-
   function display_errors()
   {
     $msg_string = '';
@@ -271,6 +262,7 @@ class Validator {
     echo $msg_string;
   }
 
+  // @return Array of Field objects
   function get_fields()
   {
     $fields = array();
@@ -281,10 +273,23 @@ class Validator {
     return $fields;
   }
 
+  // @return Field object
   function get_field_by_name( $name )
   {
     $field = $this->get_fields();
     return $field[ $name ];
+  }
+
+  function _validate()
+  {
+    foreach ( $this->_fields as $field )
+    {
+      if ( !$field->is_valid( $this->_posted ) ) 
+      {
+        $this->_is_form_valid = false;
+        $this->_errors[] = $field->error();
+      }
+    }
   }
 
 } // Validator
