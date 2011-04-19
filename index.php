@@ -29,7 +29,7 @@ $validator = new Validator(array(
   ),
   'accept_terms'=> array(
     'human_name'=>'Accept Terms',
-    'rules'=>array('checked'=>true),
+    'rules'=>array('checked'),
     'type'=>'checkbox'
   ),
 ));

@@ -49,6 +49,18 @@ class ValidatorTest extends WebTestCase {
     $this->click('Submit');
     $this->assertPattern('/Email must have a valid format./');
   }
+
+  function testTermsNotAccepted()
+  {
+    $this->setField('first_name', 'Julien');
+    $this->setField('last_name', 'Desrosiers');
+    $this->setField('email', 'test@gmail.com');
+    $this->setField('username', 'jdesrosiers');
+    $this->setField('password', '23r29fh2f2');
+    $this->setField('confirm_password', '23r29fh2f2');
+    $this->click('Submit');
+    $this->assertPattern('/Accept Terms must be checked./');
+  }
 }
 
 

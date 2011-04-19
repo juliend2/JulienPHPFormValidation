@@ -16,6 +16,11 @@ class Field {
   var $_formats     = array(
     'email' => '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'
   );
+  var $_messages    = array(
+    'not_empty' => " must not be empty.",
+    'checked' => " must be checked.",
+    'format' => " must have a valid format."
+  );
   var $_posted_data = array();
   var $_error       = array(); // keys: message, type
   var $_rules       = array();
@@ -96,39 +101,48 @@ class Field {
     foreach ( $this->_rules as $rule )
     {
       $message = is_array($rule) && $rule['message'] ? $rule['message'] : '' ;
-      if ( $rule === 'not_empty' || $rule['not_empty'])
-      {
-        $this->_validate_not_empty( $message );
-      }
-      else if ( $rule['format'] )
-      {
-        $this->_validate_format( $rule['format'], $message );
-      }
+
+      if (!$this->_validate_not_empty( $rule, $message )) break;
+      if (!$this->_validate_format( $rule, $message ))    break;
+      if (!$this->_validate_checked( $rule, $message ))   break;
     }
   }
 
-  function _validate_not_empty($message='')
+  function _validate_not_empty($rule, $message)
   {
-    if ( empty($this->_posted_data[ $this->_name ]) )
+    if ( $rule === 'not_empty' && empty($this->_posted_data[ $this->_name ]) )
     {
       $this->_error = array(
         'type'=>'not_empty', 
-        'message'=>$this->_format_message($message, ' must not be empty.') );
-      $this->_is_valid = false;
-      return false;
+        'message'=>$this->_format_message($message, $this->_messages['not_empty']) );
+      return $this->_is_valid = false;
     }
+    else return true;
   }
 
-  function _validate_format($format, $message='')
+  function _validate_format($rule, $message)
   {
-    if ( !preg_match($this->_formats[$format], $this->_posted_data[ $this->_name ]) )
+    if ( is_array($rule) && array_key_exists('format', $rule) && 
+         !preg_match($this->_formats[ $rule['format'] ], $this->_posted_data[ $this->_name ]) )
     {
       $this->_error = array(
         'type'=>'format',
-        'message'=>$this->_format_message($message, ' must have a valid format.'));
-      $this->_is_valid = false;
-      return false;
-    }
+        'message'=>$this->_format_message($message, $this->_messages['format']));
+      return $this->_is_valid = false;
+    } 
+    else return true;
+  }
+
+  function _validate_checked($rule, $message)
+  {
+    if ( $rule === 'checked' && empty($this->_posted_data[ $this->_name ]) )
+    {
+      $this->_error = array(
+        'type'=>'checked',
+        'message'=>$this->_format_message($message, $this->_messages['checked']));
+      return $this->_is_valid = false;
+    } 
+    else return true;
   }
 
   function _format_message($message, $default_message)
