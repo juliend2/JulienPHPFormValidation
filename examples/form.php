@@ -1,6 +1,6 @@
 <?php
 
-include_once('validator.php');
+include_once('../validator.php');
 
 $validator = new Validator(array(
   'first_name'=> array(
@@ -43,7 +43,7 @@ if ( $_POST )
 
 <h1>Hello</h1>
 
-<form method="post" action="index.php">
+<form method="post" action="form.php">
 
   <ul>
     <?php 

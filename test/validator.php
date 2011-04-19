@@ -9,7 +9,7 @@ class ValidatorTest extends WebTestCase {
 
   function setUp()
   {
-    $this->get('http://localhost/julienPHPFormValidation/index.php');
+    $this->get('http://localhost/julienPHPFormValidation/examples/form.php');
     $this->assertText('Hello');
   }
 

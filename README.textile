@@ -1,0 +1,45 @@
+h1. JulienPHPFormValidation
+
+h2. Who is it for?
+
+It's a library for people like me who don't want/need to use a PHP framework.
+
+h2. Usage
+
+include it:
+
+pre. include_once('validator.php');
+
+instanciate it:
+
+pre. $validator = new Validator(array(
+  'first_name' => array(
+    'human_name' => "First Name",
+    'rules' => array('not_empty', array('min_length'=>2))
+  ),
+  'email' => array(
+    'human_name' => "Email",
+    'rules' => array('not_empty', array('format'=>'email'))
+  )
+));
+
+put this where you want to display the errors:
+
+pre. $validator->display_errors();
+
+now to keep the user-entered values when people send the form, we need
+this variable to be set:
+
+pre. $fields = $validator->get_fields();
+
+and in each fields, we call the value() method like so:
+
+pre. <input type="text" name="first_name" <?php $fields['first_name']->value() ?> /></p>
+
+For more details, look at form.php in the examples folder.
+
+h2. Testing
+
+To run the tests, you must include
+"SimpleTest":http://www.simpletest.org in test/validator.php .
+You'll probably also need to change the URL in the setUp method.
