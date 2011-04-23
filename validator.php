@@ -24,6 +24,7 @@ class Field {
   var $_is_valid    = true;
   var $_type        = 'text';
   var $_human_name  = '';
+  var $_default     = '';
   var $_name        = '';
   var $_form_instance;
 
@@ -50,6 +51,11 @@ class Field {
   function human()
   {
     return $this->_human_name;
+  }
+
+  function set_default($default)
+  {
+    $this->_default = $default;
   }
 
   // @return Boolean
@@ -82,6 +88,9 @@ class Field {
     }
     else
     {
+      if ($default_value === '' && $this->_default !== '') {
+        $default_value = $this->_default;
+      }
       if ( $this->_type === 'checkbox' )
       {
         echo " value='on'";
@@ -269,11 +278,15 @@ class Validator {
   }
 
   // @return Array of Field objects
-  function get_fields()
+  function get_fields($defaults = array())
   {
     $fields = array();
     foreach ( $this->_fields as $k => $v )
     {
+      if ( isset($defaults[$v->name()]) )
+      {
+        $v->set_default($defaults[$v->name()]);
+      }
       $fields[ $v->name() ] = $v;
     }
     return $fields;
