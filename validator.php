@@ -15,6 +15,7 @@ class Field {
     'same_as' => "{{attribute}} must be the same as {{same_as}}."
   );
   var $_formats     = array(
+    'url' => '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@',
     'email' => '/^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/'
   );
   var $_posted_data = array();
@@ -250,6 +251,11 @@ class Validator {
     {
       $this->_validate();
     }
+  }
+
+  function is_valid()
+  {
+    return $this->_is_form_valid;
   }
 
   function display_errors()
