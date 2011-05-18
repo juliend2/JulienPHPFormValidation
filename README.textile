@@ -6,6 +6,8 @@ It's a form validation library for people who, like me, don't want/need to use a
 
 h2. Usage
 
+h3. Immediate Validation (Default)
+
 include it:
 
 pre. include_once('validator.php');
@@ -37,6 +39,29 @@ and in each fields, we call the value() method like so:
 pre. <input type="text" name="first_name" <?php $fields['first_name']->value() ?> /></p>
 
 For more details, look at form.php in the examples folder.
+
+h3. Deferred validation
+
+Sometimes it's nicer to define the validation rules earlier and proceed with the actual validation later on, with a sanitized version of the $_POST hash.
+
+Here's how you can do this:
+
+pre. $validator = new Validator(array(
+  'first_name' => array(
+    'human_name' => "First Name",
+    'rules' => array('not_empty', array('min_length'=>2))
+  ),
+  'email' => array(
+    'human_name' => "Email",
+    'rules' => array('not_empty', array('format'=>'email'))
+  )
+), false); // <-- The validation will be deferred because of this argument
+
+Then, later, when you have sanitized your POSTed data, you can perform the validation like this:
+
+pre. $validator->validate($sanitized_POST);
+
+The rest is like the "Immediate Validation".
 
 h2. Testing
 
