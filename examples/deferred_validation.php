@@ -40,7 +40,8 @@ $validator = new Validator(array(
 
 <?php
 // Perform the validation after the instanciation of Validor() !
-$validator->validate();
+$sanitized_POST= $_POST;
+$validator->validate($sanitized_POST);
 ?>
 
 <form method="post" action="form.php">
