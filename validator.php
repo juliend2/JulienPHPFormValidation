@@ -234,6 +234,7 @@ class Validator {
 
   var $error_template = '<li class="error">{{error_msg}}</li>';
   var $_posted        = array();
+  var $_rules         = array();
   var $_fields        = array();
   var $_errors        = array();
   var $_is_form_valid = true;
@@ -241,11 +242,21 @@ class Validator {
   /**
    * @param Array $rules
    */
-  function Validator ($fields) // this library is Backward-Compatible™
+  function Validator ($rules, $validate_immediately = true) // this library is Backward-Compatible™
   {
-    $this->_posted = $_POST;
+    $this->_rules = $rules;
 
-    foreach ( $fields as $field_name => $field_infos )
+    if($validate_immediately)
+    {
+      $this->validate($_POST);
+    }
+  }
+
+  function validate($data)
+  {
+    $this->_posted = $data;
+
+    foreach ( $this->_rules as $field_name => $field_infos )
     {
       $this->_fields[] = new Field(
         $this, 
