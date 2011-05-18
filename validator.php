@@ -250,16 +250,6 @@ class Validator {
   {
     $this->_rules = $rules;
 
-    if($validate_immediately)
-    {
-      $this->validate($_POST);
-    }
-  }
-
-  function validate($data)
-  {
-    $this->_posted = $data;
-
     foreach ( $this->_rules as $field_name => $field_infos )
     {
       $this->_fields[] = new Field(
@@ -270,6 +260,16 @@ class Validator {
         $field_infos['type'] ? $field_infos['type'] : 'text'
         );
     }
+
+    if($validate_immediately)
+    {
+      $this->validate($_POST);
+    }
+  }
+
+  function validate($data)
+  {
+    $this->_posted = $data;
 
     if ( $this->_posted )
     {
