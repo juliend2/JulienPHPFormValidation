@@ -85,6 +85,13 @@ class Field {
       {
         echo " checked='checked'";
       }
+      else if ( $this->_type === 'radio' )
+      {
+        if ( $default_value !== '' && $default_value === $this->_posted_value() )
+        {
+          echo " checked='checked'";
+        }
+      }
       else
       {
         echo " value='{$this->_posted_value()}'";
@@ -98,6 +105,10 @@ class Field {
       if ( $this->_type === 'checkbox' )
       {
         echo " value='on'";
+      }
+      else if ( $this->_type === 'radio' )
+      {
+        echo '';
       }
       else
       {
