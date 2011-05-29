@@ -282,6 +282,8 @@ class Validator {
   {
     $this->_posted = $data;
 
+    $this->before_validate();
+
     if ( !empty($this->_posted) )
     {
       $this->_validate();
@@ -336,6 +338,10 @@ class Validator {
       }
     }
   }
+
+// filters
+
+  function before_validate() { } // extend Validator to define your own before_validate() method
 
 } // Validator
 
