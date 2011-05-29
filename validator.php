@@ -282,7 +282,7 @@ class Validator {
   {
     $this->_posted = $data;
 
-    if ( $this->_posted )
+    if ( !empty($this->_posted) )
     {
       $this->_validate();
     }
