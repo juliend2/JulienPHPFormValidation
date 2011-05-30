@@ -5,6 +5,30 @@ require_once('../../simpletest/web_tester.php');
 require_once('../../simpletest/reporter.php');
 require_once('../validator.php');
 
+class ValidatorInstanceTest extends UnitTestCase {
+
+  function setUp()
+  {
+    $this->validator = new Validator(array(
+      'name'=> array(
+        'human_name'=>'Name',
+        'rules'=>array('not_empty'),
+        'type'=>'text'
+      ),
+      'not_a_valid_key' => array(
+        'data_type'=>'something'
+        // note that there is no "rules" key here
+      )
+    ));
+    $this->rules = $this->validator->get_rules();
+  }
+
+  function testRulesNotPolluted()
+  {
+    $this->assertNull($this->rules['not_a_valid_key']);
+  }
+}
+
 class ValidatorTest extends WebTestCase {
 
   function setUp()
@@ -153,6 +177,9 @@ class DeferredValidatorTest extends WebTestCase {
   }
 }
 
+
+$test = new ValidatorInstanceTest();
+$test->run(new HtmlReporter());
 
 $test = new ValidatorTest();
 $test->run(new HtmlReporter());

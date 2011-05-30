@@ -32,6 +32,10 @@ $validator = new Validator(array(
     'rules'=>array('checked'),
     'type'=>'checkbox'
   ),
+  'not_a_valid_key' => array(
+    'data_type'=>'something'
+    // note that there is no "rules" key here
+  )
 ));
 
 ?>

@@ -26,7 +26,7 @@ class Field {
   var $_error       = array(); // keys: message, type
   var $_rules       = array();
   var $_is_valid    = true;
-  var $_type        = 'text';
+  var $_type        = 'text'; // text, radio, checkbox
   var $_human_name  = '';
   var $_default     = '';
   var $_name        = '';
@@ -273,6 +273,10 @@ class Validator {
           empty($field_infos['type']) ? 'text' : $field_infos['type']
           );
       }
+      else
+      {
+        unset($this->_rules[$field_name]); // that rule does not count, so delete it from the rules property
+      }
     }
 
     if($validate_immediately)
@@ -328,6 +332,11 @@ class Validator {
   {
     $field = $this->get_fields();
     return $field[ $name ];
+  }
+
+  function get_rules()
+  {
+    return $this->_rules;
   }
 
   function _validate()
