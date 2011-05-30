@@ -26,7 +26,7 @@ class Field {
   var $_error       = array(); // keys: message, type
   var $_rules       = array();
   var $_is_valid    = true;
-  var $_type        = 'text'; // text, radio, checkbox
+  var $_type        = 'text'; // text, radio, checkbox, select
   var $_human_name  = '';
   var $_default     = '';
   var $_name        = '';
@@ -310,6 +310,11 @@ class Validator {
       $msg_string .= str_replace('{{error_msg}}', $v['message'], $this->error_template);
     }
     echo $msg_string;
+  }
+
+  function get_errors()
+  {
+    return $this->_errors;
   }
 
   // @return Array of Field objects
