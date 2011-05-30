@@ -263,13 +263,16 @@ class Validator {
 
     foreach ( $this->_rules as $field_name => $field_infos )
     {
-      $this->_fields[] = new Field(
-        $this, 
-        $field_name, 
-        $field_infos['rules'], 
-        $field_infos['human_name'] ? $field_infos['human_name'] : '',
-        $field_infos['type'] ? $field_infos['type'] : 'text'
-        );
+      if (!empty($field_infos['rules']))
+      {
+        $this->_fields[] = new Field(
+          $this, 
+          $field_name, 
+          $field_infos['rules'], 
+          empty($field_infos['human_name']) ? '' : $field_infos['human_name'],
+          empty($field_infos['type']) ? 'text' : $field_infos['type']
+          );
+      }
     }
 
     if($validate_immediately)
