@@ -117,6 +117,18 @@ class Field {
     }
   }
 
+  function get_value()
+  {
+    if ($this->_is_form_posted())
+    {
+      return $this->_posted_value();
+    }
+    else
+    {
+      return $this->_default;
+    }
+  }
+
   function _dispatch_validation()
   {
     foreach ( $this->_rules as $rule )
