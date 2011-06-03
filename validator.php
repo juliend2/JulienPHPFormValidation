@@ -70,6 +70,14 @@ class Field {
     return $this->_is_valid;
   }
 
+  // getter for _is_valid property.
+  // To be called after we validate the field
+  // @return Boolean
+  function get_is_valid()
+  {
+    return $this->_is_valid;
+  }
+
   // @return String
   function error()
   {
