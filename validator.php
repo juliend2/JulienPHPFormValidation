@@ -337,6 +337,7 @@ class Validator {
       $msg_string .= str_replace('{{error_msg}}', $v['message'], $this->error_template);
     }
     echo $msg_string;
+    return $this;
   }
 
   function get_errors()
