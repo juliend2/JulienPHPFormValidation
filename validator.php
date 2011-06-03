@@ -305,6 +305,8 @@ class Validator {
     }
   }
 
+  // command the validation
+  // @return Boolean: is the form valid
   function validate($data)
   {
     $this->_posted = $data;
@@ -314,6 +316,7 @@ class Validator {
     if ( !empty($this->_posted) )
     {
       $this->_validate();
+      return $this->is_valid();
     }
   }
 
