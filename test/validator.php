@@ -33,7 +33,7 @@ class ValidatorTest extends WebTestCase {
 
   function setUp()
   {
-    $this->get('http://localhost/julienPHPFormValidation/examples/form.php');
+    $this->get('http://localhost/libs/julienphpformvalidation/examples/form.php');
     $this->assertText('Hello');
   }
 
@@ -107,7 +107,7 @@ class DeferredValidatorTest extends WebTestCase {
 
   function setUp()
   {
-    $this->get('http://localhost/julienPHPFormValidation/examples/deferred_validation.php');
+    $this->get('http://localhost/libs/julienphpformvalidation/examples/deferred_validation.php');
     $this->assertText('Hello');
   }
 
