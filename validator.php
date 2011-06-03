@@ -71,7 +71,7 @@ class Field {
   }
 
   // getter for _is_valid property.
-  // To be called after we validate the field
+  // Must be called after we validate the field
   // @return Boolean
   function get_is_valid()
   {
@@ -315,6 +315,13 @@ class Validator {
     {
       $this->_validate();
     }
+  }
+
+  // is the form posted?
+  // @return Boolean
+  function is_posted()
+  {
+    return !empty($this->_posted);
   }
 
   function is_valid()
