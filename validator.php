@@ -16,7 +16,8 @@ class Field {
     'format' => "{{attribute}} must have a valid format.",
     'min_length' => "{{attribute}} must be at least {{min_length}} characters.",
     'max_length' => "{{attribute}} must be less than {{max_length}} characters.",
-    'same_as' => "{{attribute}} must be the same as {{same_as}}."
+    'same_as' => "{{attribute}} must be the same as {{same_as}}.",
+    'unique' => "{{attribute}} already exists. Please choose something else."
   );
   var $_formats     = array(
     'url' => '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@',
@@ -141,7 +142,7 @@ class Field {
   {
     foreach ( $this->_rules as $rule )
     {
-      $message = is_array($rule) && $rule['message'] ? $rule['message'] : '' ;
+      $message = is_array($rule) && isset($rule['message']) ? $rule['message'] : '' ;
 
       if (!$this->_validate_not_empty( $rule, $message ))  break;
       if (!$this->_validate_format( $rule, $message ))     break;
@@ -149,6 +150,7 @@ class Field {
       if (!$this->_validate_min_length( $rule, $message )) break;
       if (!$this->_validate_max_length( $rule, $message )) break;
       if (!$this->_validate_same_as( $rule, $message ))    break;
+      if (!$this->_validate_unique( $rule, $message ))     break;
     }
   }
 
@@ -231,6 +233,20 @@ class Field {
       return $this->_is_valid = false;
     } 
     else return true;
+  }
+
+  function _validate_unique($rule, $message)
+  {
+    if ( is_array($rule) && array_key_exists('unique', $rule) && $rule['unique']($this->_posted_data) )
+    {
+      $this->_error = array(
+        'type'=>'unique',
+        'message'=>$this->_format_message($message, $this->messages['unique']));
+      return $this->_is_valid = false;
+    } 
+    else {
+      return true;
+    }
   }
 
   /**
