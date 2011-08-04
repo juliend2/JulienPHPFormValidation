@@ -5,6 +5,8 @@ require_once('simpletest/web_tester.php');
 require_once('simpletest/reporter.php');
 require_once('../validator.php');
 
+$form_url = 'http://localhost:8888/libs/julienphpformvalidation/examples/form.php';
+
 class ValidatorInstanceTest extends UnitTestCase {
 
   function setUp()
@@ -25,7 +27,8 @@ class ValidatorInstanceTest extends UnitTestCase {
 
   function testRulesNotPolluted()
   {
-    $this->assertNull($this->rules['not_a_valid_key']);
+    $this->expectError(new PatternExpectation("/Undefined index/i"));
+    $this->rules['not_a_valid_key'];
   }
 }
 
@@ -33,7 +36,7 @@ class ValidatorTest extends WebTestCase {
 
   function setUp()
   {
-    $this->get('http://localhost/libs/julienphpformvalidation/examples/form.php');
+    $this->get($GLOBALS['form_url']);
     $this->assertText('Hello');
   }
 
@@ -107,7 +110,7 @@ class DeferredValidatorTest extends WebTestCase {
 
   function setUp()
   {
-    $this->get('http://localhost/libs/julienphpformvalidation/examples/deferred_validation.php');
+    $this->get($GLOBALS['form_url']);
     $this->assertText('Hello');
   }
 
